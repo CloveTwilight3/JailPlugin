@@ -1,0 +1,45 @@
+name: JailPlugin
+version: '1.0'
+main: com.example.jailplugin.JailPlugin
+api-version: '1.21'
+commands:
+  setjail:
+    description: Set the jail location
+    usage: /<command> [x y z]
+    permission: jailplugin.setjail
+  setunjail:
+    description: Set the unjail location
+    usage: /<command> [x y z]
+    permission: jailplugin.setunjail
+  jail:
+    description: Teleport a player to jail
+    usage: /<command> <player>
+    permission: jailplugin.jail
+  unjail:
+    description: Release a player from jail
+    usage: /<command> <player>
+    permission: jailplugin.unjail
+  jailreload:
+    description: Reload the JailPlugin configuration
+    usage: /<command>
+    permission: jailplugin.reload
+  jailhelp:
+    description: Display help for JailPlugin commands
+    usage: /<command>
+
+permissions:
+  jailplugin.setjail:
+    description: Allows setting the jail location
+    default: op
+  jailplugin.setunjail:
+    description: Allows setting the unjail location
+    default: op
+  jailplugin.jail:
+    description: Allows jailing other players
+    default: op
+  jailplugin.unjail:
+    description: Allows releasing players from jail
+    default: op
+  jailplugin.reload:
+    description: Allows reloading the plugin configuration
+    default: op

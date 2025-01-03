@@ -25,6 +25,12 @@ public class JailPlugin extends JavaPlugin {
         getLogger().info("JailPlugin has been disabled!");
     }
 
+    // Method to check if a player is jailed
+    public boolean isPlayerJailed(Player player) {
+        return jailLocation != null && player.getLocation().distance(jailLocation) < 2.0;
+    }
+
+    // Load jail and unjail locations from config
     private void loadLocations() {
         if (getConfig().contains("jail")) {
             World world = getServer().getWorld(getConfig().getString("jail.world"));
@@ -47,6 +53,7 @@ public class JailPlugin extends JavaPlugin {
         }
     }
 
+    // Save jail and unjail locations to config
     private void saveLocations() {
         if (jailLocation != null) {
             getConfig().set("jail.world", jailLocation.getWorld().getName());
@@ -69,6 +76,7 @@ public class JailPlugin extends JavaPlugin {
         saveConfig();
     }
 
+    // Handle plugin commands
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         switch (cmd.getName().toLowerCase()) {
@@ -89,6 +97,7 @@ public class JailPlugin extends JavaPlugin {
         }
     }
 
+    // Set jail location
     private boolean handleSetJail(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "This command can only be used by players!");
@@ -123,6 +132,7 @@ public class JailPlugin extends JavaPlugin {
         return true;
     }
 
+    // Set unjail location
     private boolean handleSetUnjail(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "This command can only be used by players!");
@@ -157,6 +167,7 @@ public class JailPlugin extends JavaPlugin {
         return true;
     }
 
+    // Jail a player
     private boolean handleJail(CommandSender sender, String[] args) {
         if (!sender.hasPermission("jailplugin.jail")) {
             sender.sendMessage(ChatColor.RED + "You don't have permission to use this command!");
@@ -185,6 +196,7 @@ public class JailPlugin extends JavaPlugin {
         return true;
     }
 
+    // Unjail a player
     private boolean handleUnjail(CommandSender sender, String[] args) {
         if (!sender.hasPermission("jailplugin.unjail")) {
             sender.sendMessage(ChatColor.RED + "You don't have permission to use this command!");
@@ -213,6 +225,7 @@ public class JailPlugin extends JavaPlugin {
         return true;
     }
 
+    // Reload the plugin configuration
     private boolean handleReload(CommandSender sender) {
         if (!sender.hasPermission("jailplugin.reload")) {
             sender.sendMessage(ChatColor.RED + "You don't have permission to reload the configuration!");
@@ -225,6 +238,7 @@ public class JailPlugin extends JavaPlugin {
         return true;
     }
 
+    // Display help message
     private boolean handleHelp(CommandSender sender) {
         sender.sendMessage(ChatColor.YELLOW + "JailPlugin Commands:");
         sender.sendMessage(ChatColor.GREEN + "/setjail [x y z]" + ChatColor.WHITE + " - Set the jail location.");

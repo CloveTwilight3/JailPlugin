@@ -3,19 +3,35 @@ package com.example.jailplugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.entity.Player;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.ChatColor;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import org.bukkit.scheduler.BukkitRunnable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.entity.Player;
 
-public class JailPlugin extends JavaPlugin {
+
+public class JailPlugin extends JavaPlugin implements Listener {
     private Location jailLocation;
     private Location unjailLocation;
+    private final Map<UUID, Long> jailedPlayers = new HashMap<>();
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
         loadLocations();
+        startUnjailTask();
+        getServer().getPluginManager().registerEvents(this, this);
         getLogger().info("JailPlugin has been enabled!");
     }
 
@@ -25,9 +41,44 @@ public class JailPlugin extends JavaPlugin {
         getLogger().info("JailPlugin has been disabled!");
     }
 
+    @EventHandler
+    public void onPlayerAttack(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
+            Player attacker = (Player) event.getDamager();
+            Player victim = (Player) event.getEntity();
+
+            if (isPlayerJailed(attacker) && isPlayerJailed(victim)) {
+                attacker.sendMessage(ChatColor.RED + "You cannot attack other jailed players!");
+                event.setCancelled(true);
+            }
+        }
+    }
+
     // Method to check if a player is jailed
     public boolean isPlayerJailed(Player player) {
         return jailLocation != null && player.getLocation().distance(jailLocation) < 2.0;
+    }
+
+    private void startUnjailTask() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                long currentTime = System.currentTimeMillis();
+                jailedPlayers.entrySet().removeIf(entry -> {
+                    UUID playerId = entry.getKey();
+                    long unjailTime = entry.getValue();
+                    if (currentTime >= unjailTime) {
+                        Player player = getServer().getPlayer(playerId);
+                        if (player != null && unjailLocation != null) {
+                            player.teleport(unjailLocation);
+                            player.sendMessage(ChatColor.GREEN + "You have been released from jail!");
+                        }
+                        return true;
+                    }
+                    return false;
+                });
+            }
+        }.runTaskTimer(this, 20, 20);
     }
 
     // Load jail and unjail locations from config
@@ -167,7 +218,6 @@ public class JailPlugin extends JavaPlugin {
         return true;
     }
 
-    // Jail a player
     private boolean handleJail(CommandSender sender, String[] args) {
         if (!sender.hasPermission("jailplugin.jail")) {
             sender.sendMessage(ChatColor.RED + "You don't have permission to use this command!");
@@ -179,8 +229,8 @@ public class JailPlugin extends JavaPlugin {
             return true;
         }
 
-        if (args.length != 1) {
-            sender.sendMessage(ChatColor.RED + "Usage: /jail <player>");
+        if (args.length < 1 || args.length > 2) {
+            sender.sendMessage(ChatColor.RED + "Usage: /jail <player> [time]");
             return true;
         }
 
@@ -190,9 +240,29 @@ public class JailPlugin extends JavaPlugin {
             return true;
         }
 
+        long jailTime = 0;
+        if (args.length == 2) {
+            try {
+                String[] timeParts = args[1].split(":");
+                int hours = timeParts.length > 2 ? Integer.parseInt(timeParts[0]) : 0;
+                int minutes = timeParts.length > 1 ? Integer.parseInt(timeParts[timeParts.length - 2]) : 0;
+                int seconds = Integer.parseInt(timeParts[timeParts.length - 1]);
+                jailTime = (hours * 3600 + minutes * 60 + seconds) * 1000L;
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                sender.sendMessage(ChatColor.RED + "Invalid time format! Use: HH:MM:SS, MM:SS, or SS");
+                return true;
+            }
+        }
+
         target.teleport(jailLocation);
         target.sendMessage(ChatColor.RED + "You have been jailed!");
         sender.sendMessage(ChatColor.GREEN + "Player " + target.getName() + " has been jailed!");
+
+        if (jailTime > 0) {
+            long unjailTime = System.currentTimeMillis() + jailTime;
+            jailedPlayers.put(target.getUniqueId(), unjailTime);
+        }
+
         return true;
     }
 
@@ -243,7 +313,7 @@ public class JailPlugin extends JavaPlugin {
         sender.sendMessage(ChatColor.YELLOW + "JailPlugin Commands:");
         sender.sendMessage(ChatColor.GREEN + "/setjail [x y z]" + ChatColor.WHITE + " - Set the jail location.");
         sender.sendMessage(ChatColor.GREEN + "/setunjail [x y z]" + ChatColor.WHITE + " - Set the unjail location.");
-        sender.sendMessage(ChatColor.GREEN + "/jail <player>" + ChatColor.WHITE + " - Jail a player.");
+        sender.sendMessage(ChatColor.GREEN + "/jail <player> [time]" + ChatColor.WHITE + " - Jail a player. Optional time format: HH:MM:SS, MM:SS, or SS.");
         sender.sendMessage(ChatColor.GREEN + "/unjail <player>" + ChatColor.WHITE + " - Unjail a player.");
         sender.sendMessage(ChatColor.GREEN + "/jailreload" + ChatColor.WHITE + " - Reload the plugin configuration.");
         sender.sendMessage(ChatColor.GREEN + "/jailhelp" + ChatColor.WHITE + " - Show this help message.");

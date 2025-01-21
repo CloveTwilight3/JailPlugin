@@ -1,13 +1,62 @@
 # JailPlugin
-This is a simple jail command to tp players to a jail and to tp them out of jail after they serve their punshment
 
-# Commands
-/setjail - Sets the location of the jail to your location (optionally add coordinates on the end to set to that location)
+A Paper plugin for Minecraft servers that adds jail functionality, enabling server admins to manage player behavior effectively.
 
-/jail <username> - Jails the user
+---
 
-/setunjail - Sets the location of freedom to your location (optionally add coordinates on the end to set to that location)
+## Overview
 
-/unjail <username> - Removes the user from jail
+The **JailPlugin** provides a simple but powerful tool for server administrators to teleport players to a designated jail location and release them after serving their punishment. Fully configurable and easy to use, this plugin integrates seamlessly with your server setup.
 
-/jailhelp - Brings up the help guide
+This plugin is owned and copyrighted by **UnifiedGaming Systems Ltd** and is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0). You can view the full [LICENSE here](https://github.com/mazeymoos0022/jailplugin/blob/main/LICENSE).
+
+---
+
+## Commands
+
+### Admin Commands
+
+- **`/setjail [<x> <y> <z>]`**
+  - Sets the location of the jail to your current position or optionally to specified coordinates.
+
+- **`/setunjail [<x> <y> <z>]`**
+  - Sets the location of freedom (unjail) to your current position or optionally to specified coordinates.
+
+- **`/jail <username> [time in format xx:xx:xx]`**
+  - Teleports the specified player to the jail location.
+
+- **`/unjail <username>`**
+  - Releases the specified player from jail and teleports them to the unjail location.
+
+- **`/jailhelp`**
+  - Displays the help guide for all available commands.
+
+---
+
+## Features
+
+- **Customizable Jail Locations**: Set the jail and unjail locations via commands or specific coordinates.
+- **Punishment Tracking**: Keep players confined for the duration of their punishment.
+- **Admin-Friendly Commands**: Intuitive commands for managing jailed players.
+- **Lightweight**: Optimized for performance and minimal server impact.
+
+---
+
+## Installation
+
+1. Download the latest release of **JailPlugin** from the [Releases](https://github.com/mazeymoos0022/jailplugin/releases) page.
+2. Place the `.jar` file into your server's `plugins` folder.
+3. Restart your server to load the plugin.
+4. Use `/jailhelp` to get started with configuring and using the plugin.
+
+---
+
+## Licensing
+
+This plugin is owned and copyrighted by **UnifiedGaming Systems Ltd** and is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0). You can view the full [LICENSE here](https://github.com/mazeymoos0022/jailplugin/blob/main/LICENSE).
+
+---
+
+## About
+
+The JailPlugin was created to provide server administrators with a robust tool for maintaining order and managing player behavior. Developed under UnifiedGaming Systems Ltd, it reflects our commitment to high-quality, user-friendly Minecraft server enhancements.

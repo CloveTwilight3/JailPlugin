@@ -45,9 +45,10 @@ This plugin is owned and copyrighted by **UnifiedGaming Systems Ltd** and is lic
 ## Installation
 
 1. Download the latest release of **JailPlugin** from the [Releases](https://github.com/mazeymoos0022/jailplugin/releases) page.
-2. Place the `.jar` file into your server's `plugins` folder.
-3. Restart your server to load the plugin.
-4. Use `/jailhelp` to get started with configuring and using the plugin.
+2. Download and install the required [CloveLib](https://github.com/mazeymoos0022/clovelib/releases) library.
+3. Place the `.jar` files into your server's `plugins` folder.
+4. Restart your server to load the plugins.
+5. Use `/jailhelp` to get started with configuring and using the plugin.
 
 ---
 

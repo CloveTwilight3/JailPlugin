@@ -28,6 +28,8 @@ public class JailPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        String githubApiUrl = "https://api.github.com/repos/MazeyMoos0022/JailPlugin/releases/latest";
+        new UpdateChecker(this, githubApiUrl).checkForUpdates();
         saveDefaultConfig();
         loadLocations();
         startUnjailTask();

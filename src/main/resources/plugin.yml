@@ -1,5 +1,5 @@
 name: JailPlugin
-version: '1.6.0'
+version: 1.6
 main: com.example.jailplugin.JailPlugin
 api-version: '1.21'
 commands:

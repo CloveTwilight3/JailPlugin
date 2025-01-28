@@ -25,7 +25,8 @@
         <dependency>
             <groupId>com.org.clovelib</groupId>
             <artifactId>clovelib</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

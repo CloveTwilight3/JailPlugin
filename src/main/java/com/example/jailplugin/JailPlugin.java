@@ -23,13 +23,28 @@ public class JailPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        String githubApiUrl = "https://api.github.com/repos/MazeyMoos0022/JailPlugin/releases/latest";
-        new UpdateChecker(this, githubApiUrl).checkForUpdates();
-        saveDefaultConfig();
-        loadLocations();
-        startUnjailTask();
-        getServer().getPluginManager().registerEvents(this, this);
-        getLogger().info("JailPlugin has been enabled!");
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                CloveLib cloveLib = CloveLib.getInstance();
+                if (cloveLib == null) {
+                    getLogger().severe("CloveLib is still not initialized! Disabling JailPlugin.");
+                    getServer().getPluginManager().disablePlugin(JailPlugin.this);
+                    return;
+                }
+
+                getLogger().info("CloveLib successfully accessed by JailPlugin.");
+                getLogger().info("CloveLib instance hash: " + System.identityHashCode(cloveLib));
+
+                // Proceed with plugin initialization
+                saveDefaultConfig();
+                loadLocations();
+                startUnjailTask();
+                getServer().getPluginManager().registerEvents(JailPlugin.this, JailPlugin.this);
+
+                getLogger().info("JailPlugin has been enabled successfully!");
+            }
+        }.runTaskLater(this, 1L);
     }
 
     @Override
@@ -37,6 +52,18 @@ public class JailPlugin extends JavaPlugin implements Listener {
         saveLocations();
         getLogger().info("JailPlugin has been disabled!");
     }
+
+    @Override
+    public void onLoad() {
+        getLogger().info("JailPlugin is loading...");
+        CloveLib cloveLib = CloveLib.getInstance();
+        if (cloveLib == null) {
+            getLogger().warning("CloveLib instance is null during JailPlugin onLoad. This may resolve during onEnable.");
+        } else {
+            getLogger().info("CloveLib instance is accessible during JailPlugin onLoad.");
+        }
+    }
+
 
     @EventHandler
     public void onPlayerAttack(EntityDamageByEntityEvent event) {
@@ -65,7 +92,12 @@ public class JailPlugin extends JavaPlugin implements Listener {
                             player.teleport(unjailLocation);
                             player.sendMessage(ChatColor.GREEN + "You have been released from jail!");
                         }
-                        CloveLib.getInstance().clearPlayerJailData(playerId);
+                        CloveLib cloveLib = CloveLib.getInstance();
+                        if (cloveLib != null) {
+                            cloveLib.clearPlayerJailData(playerId);
+                        } else {
+                            getLogger().severe("CloveLib instance is null during unjail task!");
+                        }
                         return true;
                     }
                     return false;
@@ -225,7 +257,12 @@ public class JailPlugin extends JavaPlugin implements Listener {
         target.sendMessage(ChatColor.RED + "You have been jailed!");
         sender.sendMessage(ChatColor.GREEN + "Player " + target.getName() + " has been jailed!");
 
-        CloveLib.getInstance().setPlayerJailData(target.getUniqueId(), new CloveLib.JailData(true, System.currentTimeMillis() + jailTime, jailLocation, unjailLocation));
+        CloveLib cloveLib = CloveLib.getInstance();
+        if (cloveLib != null) {
+            cloveLib.setPlayerJailData(target.getUniqueId(), new CloveLib.JailData(true, System.currentTimeMillis() + jailTime, jailLocation, unjailLocation));
+        } else {
+            getLogger().severe("CloveLib instance is null while jailing a player!");
+        }
 
         return true;
     }

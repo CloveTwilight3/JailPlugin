@@ -2,6 +2,8 @@ name: JailPlugin
 version: 1.6
 main: com.example.jailplugin.JailPlugin
 api-version: '1.21'
+description: A simple jail plugin for Minecraft.
+depend: [CloveLib]
 commands:
   setjail:
     description: Set the jail location

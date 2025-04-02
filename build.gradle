@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group = 'co.uk.clovetwilight3'
+version = '2.0.0'
+description = 'JailPlugin'
+
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+}
+
+repositories {
+    mavenCentral()
+
+    maven {
+        name = 'papermc'
+        url = 'https://repo.papermc.io/repository/maven-public/'
+    }
+
+    maven {
+        name = 'clovelib-github'
+        url = 'https://maven.pkg.github.com/CloveTwilight3/CloveLib'
+        credentials {
+            username = System.getenv("GITHUB_USERNAME") ?: "username"
+            password = System.getenv("GITHUB_TOKEN") ?: "ghp_xxx"
+        }
+    }
+}
+
+dependencies {
+    compileOnly 'io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT'
+    compileOnly 'com.org.clovelib:clovelib:1.2'
+}
+
+// Optional: shaded output (e.g., in case you change scope or add embedded deps)
+shadowJar {
+    archiveClassifier.set('all')
+    // No main class set (like in original Maven config)
+}
+
+tasks.build {
+    dependsOn shadowJar
+}
+
+// Support filtering in resources
+processResources {
+    filteringCharset = 'UTF-8'
+    filesMatching('**/*.yml') {
+        expand(project.properties)
+    }
+}

@@ -61,3 +61,10 @@ This plugin is owned and copyrighted by **UnifiedGaming Systems Ltd** and is lic
 ## About
 
 The JailPlugin was created to provide server administrators with a robust tool for maintaining order and managing player behavior. Developed under UnifiedGaming Systems Ltd, it reflects our commitment to high-quality, user-friendly Minecraft server enhancements.
+
+---
+
+## Contributors
+<a href="https://github.com/CloveTwilight3/clovetwilight3/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=CloveTwilight3/JailPlugin" />
+</a>

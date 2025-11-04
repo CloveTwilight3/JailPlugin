@@ -58,6 +58,11 @@ This plugin is owned and copyrighted by **UnifiedGaming Systems Ltd** and is lic
 
 ---
 
+## Help
+If you need help. [join our discord](https://discord.gg/k8HrBvDaQn)
+
+---
+
 ## About
 
 The JailPlugin was created to provide server administrators with a robust tool for maintaining order and managing player behavior. Developed under UnifiedGaming Systems Ltd, it reflects our commitment to high-quality, user-friendly Minecraft server enhancements.
